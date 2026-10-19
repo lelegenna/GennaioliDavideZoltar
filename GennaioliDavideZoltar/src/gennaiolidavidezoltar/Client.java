@@ -1,4 +1,4 @@
-package gennaiolidavideserverclient;
+package gennaiolidavidezoltar;
 
 import java.io.*;
 import java.net.*;

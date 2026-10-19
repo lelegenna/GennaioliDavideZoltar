@@ -1,26 +1,33 @@
-package gennaiolidavideserverclient;
+package gennaiolidavidezoltar;
 
 import java.io.*;
 import java.net.*;
 
 public class ThreadRicezione extends Thread {
+
     private final Socket socket;
-    private final int id;
-    public ThreadRicezione(Socket socket) { this(socket, 0); }
-    public ThreadRicezione(Socket socket, int id) { this.socket = socket; this.id = id; }
-    @Override public void run() {
+    private final Protocollo protocollo = new Protocollo(); // uno per client
+
+   
+
+    public ThreadRicezione(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String messaggio;
-            while ((messaggio = in.readLine()) != null) {
-                if (messaggio.equalsIgnoreCase("fine")) break;
-                System.out.println(id == 0 ? "Server: " + messaggio : "[Client " + id + "] " + messaggio);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+            String riga;
+            while ((riga = in.readLine()) != null) {
+                System.out.println("Ricevuto: " + riga);
+                out.println(protocollo.elabora(riga));
+                if (protocollo.èFine(riga)) break;
             }
-            System.out.println(id == 0 ? "Server disconnesso." : "Client " + id + " disconnesso.");
         } catch (IOException e) {
-            if (!socket.isClosed()) System.out.println("Connessione interrotta: " + e.getMessage());
-        } finally {
-            try { socket.close(); } catch (IOException ignored) { }
+            System.out.println("Errore ricezione: " + e.getMessage());
         }
     }
 }
