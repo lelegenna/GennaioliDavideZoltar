@@ -1,28 +1,18 @@
 package gennaiolidavidezoltar;
 
-import java.io.*;
-import java.net.*;
-import java.util.Scanner;
+import java.io.PrintWriter;
 
 public class ThreadInvio extends Thread {
-    private final Socket socket;
+    private final PrintWriter out;
+    private final String msg;
 
-   
-
-    public ThreadInvio(Socket socket) {
-        this.socket = socket;
+    public ThreadInvio(PrintWriter out, String msg) {
+        this.out = out;
+        this.msg = msg;
     }
 
     @Override
     public void run() {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            Scanner tastiera = new Scanner(System.in);
-            while (true) {
-                out.println(tastiera.nextLine());
-            }
-        } catch (IOException e) {
-            System.out.println("Errore invio: " + e.getMessage());
-        }
+        out.println(msg);
     }
 }

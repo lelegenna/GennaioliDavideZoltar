@@ -8,8 +8,6 @@ public class ThreadRicezione extends Thread {
     private final Socket socket;
     private final Protocollo protocollo = new Protocollo(); // uno per client
 
-   
-
     public ThreadRicezione(Socket socket) {
         this.socket = socket;
     }
@@ -24,10 +22,13 @@ public class ThreadRicezione extends Thread {
             while ((riga = in.readLine()) != null) {
                 System.out.println("Ricevuto: " + riga);
                 out.println(protocollo.elabora(riga));
-                if (protocollo.èFine(riga)) break;
+                if (protocollo.Fine(riga)) break;
             }
         } catch (IOException e) {
             System.out.println("Errore ricezione: " + e.getMessage());
+        } finally {
+            try { socket.close(); } catch (IOException e) { }
+            System.out.println("Client disconnesso.");
         }
     }
 }

@@ -2,19 +2,28 @@ package gennaiolidavidezoltar;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Client {
-    public static void main(String[] args) {
-        Scanner tastiera = new Scanner(System.in);
-        System.out.print("IP del server (Invio = stesso PC): ");
-        String ip = tastiera.nextLine().trim();
-        if (ip.isEmpty()) ip = "127.0.0.1";
-        try (Socket socket = new Socket(ip, 5555)) {
-            System.out.println("Collegato al server. Scrivi fine per uscire.");
-            new Threads(socket).avvia();
+    private Threads threads;
+
+    // Si collega al server. allaRisposta viene chiamato quando arriva una risposta.
+    public boolean connetti(String ip, int porta, Consumer<String> allaRisposta) {
+        try {
+            Socket socket = new Socket(ip, porta);
+            threads = new Threads(socket, allaRisposta);
+            threads.avvia();
+            return true;
         } catch (IOException e) {
-            System.out.println("Errore client: " + e.getMessage());
+            return false;
         }
+    }
+
+    public void invia(String msg) {
+        threads.invia(msg);
+    }
+
+    public void chiudi() {
+        if (threads != null) threads.chiudi();
     }
 }
