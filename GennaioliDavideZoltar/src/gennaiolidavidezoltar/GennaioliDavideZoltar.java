@@ -1,20 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package gennaiolidavidezoltar;
 
-/**
- *
- * @author gennaioli.davide
- */
+// Classe principale del progetto (Main)
 public class GennaioliDavideZoltar {
 
-    /**
-     * @param args the command line arguments
-     */
+    // Punto di partenza di Java
     public static void main(String[] args) {
-     
+        // Avvia l'interfaccia grafica Oracolo sulla finestra principale
+        java.awt.EventQueue.invokeLater(() -> new Oracolo().setVisible(true));
     }
-    
 }
