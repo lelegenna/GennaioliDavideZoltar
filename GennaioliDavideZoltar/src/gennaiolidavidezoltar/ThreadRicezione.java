@@ -7,10 +7,11 @@ import java.net.*;
 public class ThreadRicezione extends Thread {
 
     private final Socket socket;
-    private final Protocollo protocollo = new Protocollo(); // Il proprio libro delle risposte
+    private final Protocollo protocollo; // Il proprio libro delle risposte (le frasi arrivano dal file JSON)
 
-    public ThreadRicezione(Socket socket) {
+    public ThreadRicezione(Socket socket, DataManager dataManager) {
         this.socket = socket;
+        this.protocollo = new Protocollo(dataManager);
     }
 
     @Override
