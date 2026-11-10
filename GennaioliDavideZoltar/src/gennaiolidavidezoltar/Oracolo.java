@@ -226,7 +226,9 @@ public class Oracolo extends JFrame {
         btnInvia.setEnabled(false);
         avviaAnimazionePensiero();
         suonaZoltar(false);
-        client.invia(cmbPersonalita.getSelectedItem() + ";" + domanda);
+        // Prima imposto la persona, poi invio la domanda (stessa connessione, ordine garantito)
+        client.invia("PERSONA_" + cmbPersonalita.getSelectedItem());
+        client.invia("DOMANDA_" + domanda);
     }
 
     private void avviaAnimazionePensiero() {
@@ -240,10 +242,14 @@ public class Oracolo extends JFrame {
     }
 
     private void mostraRisposta(String risposta) {
+        // "OK;persona" è solo la conferma di PERSONA_...: non è una profezia, la ignoro
+        if (risposta.startsWith("OK;")) return;
+
         SwingUtilities.invokeLater(() -> {
             if (thinkingTimer != null) thinkingTimer.stop();
             btnInvia.setText("🔮  CHIEDI ALL'ORACOLO");
-            txtRisposta.setText(risposta);
+            // "ERR;messaggio" -> mostro solo il messaggio
+            txtRisposta.setText(risposta.startsWith("ERR;") ? risposta.substring(4) : risposta);
             btnInvia.setEnabled(true);
             suonaZoltar(true);
         });
